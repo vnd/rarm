@@ -1,0 +1,17 @@
+[package]
+name = "rarm"
+version = "0.1.0"
+authors = ["Ivan Drobyshevskyi <drobyshevskyi@gmail.com>"]
+
+[dependencies]
+byteorder = "*"
+bit_utils = "*"
+bit_range = "*"
+libc = "*"
+getopts = "*"
+num = "*"
+time = "*"
+enum_primitive = "*"
+
+[dependencies.capstone]
+path = "capstone-rs"
