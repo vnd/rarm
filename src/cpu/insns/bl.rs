@@ -12,8 +12,8 @@ impl ::cpu::core::CPU {
         ::util::assert_shift(arm.operands());
         assert!(arm.operands().len() == 1);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_IMM);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         let pc = self.get_reg(15);
         self.set_reg(14, pc - 4);

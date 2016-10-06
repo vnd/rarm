@@ -14,15 +14,14 @@ impl ::cpu::core::CPU {
         for op in arm.operands() {
             assert!(op.ty == ARMOpType::ARM_OP_REG);
         }
-        assert!(false == arm.update_flags);
+        assert!(!arm.update_flags);
 
         /* http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0204j/Cihcadda.html {^} */
-        let mut explicit_mode: Option<::cpu::core::ProcessorMode> = None;
         let mut copy_spsr = false;
 
-        if insn.op_str().unwrap().ends_with("} ^") {
-            explicit_mode = Some(::cpu::core::ProcessorMode::Usr);
-        }
+        let mut explicit_mode = if insn.op_str().unwrap().ends_with("} ^") {
+            Some(::cpu::core::ProcessorMode::Usr)
+        } else { None };
 
         if explicit_mode != None {
             for i in 1..arm.operands().len() {
@@ -46,11 +45,11 @@ impl ::cpu::core::CPU {
             } else {
                 ret = Some(value);
             }
-            address = address + 4;
+            address += 4;
             registers += 1;
         }
 
-        if true == arm.writeback {
+        if arm.writeback {
             let val = self.get_reg(n);
             self.set_reg(n, val + 4 * registers);
         }

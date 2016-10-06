@@ -30,7 +30,7 @@ pub fn bytes_to_u32(bytes: &[u8]) -> u32 {
 }
 
 pub unsafe fn print_insn_mnemonic(insn: &Insn, addr2line: bool) {
-    assert!(addr2line == false); // vmlinux is not included in the repo
+    assert!(!addr2line); // vmlinux is not included in the repo
     if addr2line {
         let addr = format!("{:x}", insn.address());
         let cmd = "addr2line -e ~/balau82/linux-3.2/vmlinux 0x".to_string() + addr.as_str();
@@ -45,7 +45,7 @@ pub unsafe fn print_insn_mnemonic(insn: &Insn, addr2line: bool) {
 pub fn objdump_insn(bytes: &[u8]) {
     let tmp_path = "/tmp/rarm.tmp";
     let mut f = File::create(tmp_path).unwrap();
-    f.write_all(&bytes).unwrap();
+    f.write_all(bytes).unwrap();
 
     println!("");
     let cmd = "arm-linux-gnu-objdump -EL -b binary -D -marm -d /dev/stdin < ".to_string() +
@@ -94,7 +94,7 @@ pub fn get_bits(val: u32, _range: Range<u32>) -> u32 {
         let start = range.start;
         range.end += 1;
         for j in range {
-            mask = mask | (1 << j);
+            mask |= 1 << j;
         }
 
         (val & mask) >> start
@@ -149,13 +149,13 @@ pub fn assert_shift(ops: &[ARMOp]) {
     for op in ops {
         assert!(op.shift_type == 0);
         assert!(op.shift_value == 0);
-        assert!(op.subtracted == false);
+        assert!(!op.subtracted);
     }
 }
 
 pub fn check_subtracted(ops: &[ARMOp], insn: &Insn) {
     for op in ops {
-        if op.subtracted == true && insn.op_str().unwrap().contains("-") {
+        if op.subtracted && insn.op_str().unwrap().contains('-') {
             println!("subtracted is true!");
             unsafe { print_insn_mnemonic(insn, false); }
             println!("{:#?}", op);

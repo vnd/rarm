@@ -15,26 +15,26 @@ impl ::cpu::core::CPU {
 
         assert!(arm.operands().len() == 2);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         let (result, carry) = match arm.operands()[1].ty {
-			ARMOpType::ARM_OP_REG => { 
+            ARMOpType::ARM_OP_REG => {
                 let val = self.op_value(&arm.operands()[1]).0;
-				(!val, self.get_carry())
-			},
-			ARMOpType::ARM_OP_IMM => {
-                ::util::assert_shift(&arm.operands());
-				let raw: u32 = self.mem.read(insn.address as usize);
-				let (imm, carry) = expand_imm_c(::util::get_bits(raw, 0..11), self.get_carry());
-				(!imm, carry)
-			},
-			_ => unreachable!()
-		};
+                (!val, self.get_carry())
+            },
+            ARMOpType::ARM_OP_IMM => {
+                ::util::assert_shift(arm.operands());
+                let raw: u32 = self.mem.read(insn.address as usize);
+                let (imm, carry) = expand_imm_c(::util::get_bits(raw, 0..11), self.get_carry());
+                (!imm, carry)
+            },
+            _ => unreachable!()
+        };
 
         let d = ::util::reg_num(arm.operands()[0].data());
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

@@ -19,7 +19,7 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_MEM);
         ::util::assert_shift(&arm.operands()[0..1]);
-        ::util::check_subtracted(&arm.operands(), insn);
+        ::util::check_subtracted(arm.operands(), insn);
 
         let t = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());

@@ -65,7 +65,7 @@ const SMSC_BASE:    usize = 0x4e000000;
 const USB_BASE:     usize = 0x4f000000;
 
 const RAM_BASE:     usize = 0x60000000;
-const RAM_SIZE:		usize = 16*1024*1024;
+const RAM_SIZE:     usize = 16*1024*1024;
 
 const ATAGS_ADDR:   usize = 0x60000100;
 const ZIMAGE_ADDR:  usize = 0x60010000;
@@ -88,26 +88,19 @@ fn parse_cmdline_args() -> CmdlineArgs {
     opts.optopt("n", "count break", "break after n instruction are executed", "dec");
     opts.optopt("w", "watchpoint", "set a watchpoint", "hex");
     opts.optflag("v", "verbose", "more verbose output");
-    let matches = match opts.parse(&args[1..]) {
-        Ok(m) => { m }
-        Err(f) => { panic!(f.to_string()) }
-    };
-    let bp: u32 = match matches.opt_present("b") {
-        true  => u32::from_str_radix(&matches.opt_str("b").unwrap().as_str()[2..], 16).unwrap(),
-        false => 0,
-    };
-    let bpc: u64 = match matches.opt_present("n") {
-        true  => u64::from_str_radix(&matches.opt_str("n").unwrap().as_str(), 10).unwrap(),
-        false => 0,
-    };
-    let ignore_bp: u32 = match matches.opt_present("i") {
-        true  => u32::from_str_radix(&matches.opt_str("i").unwrap().as_str(), 10).unwrap(),
-        false => 0,
-    };
-    let wp: u32 = match matches.opt_present("w") {
-        true  => u32::from_str_radix(&matches.opt_str("w").unwrap().as_str()[2..], 16).unwrap(),
-        false => 0,
-    };
+    let matches = opts.parse(&args[1..]).unwrap();
+    let bp: u32 = if matches.opt_present("b") {
+        u32::from_str_radix(&matches.opt_str("b").unwrap().as_str()[2..], 16).unwrap()
+    } else { 0 };
+    let bpc: u64 = if matches.opt_present("n") {
+        u64::from_str_radix(matches.opt_str("n").unwrap().as_str(), 10).unwrap()
+    } else { 0 };
+    let ignore_bp: u32 = if matches.opt_present("i") {
+        u32::from_str_radix(matches.opt_str("i").unwrap().as_str(), 10).unwrap()
+    } else { 0 };
+    let wp: u32 = if matches.opt_present("w") {
+        u32::from_str_radix(&matches.opt_str("w").unwrap().as_str()[2..], 16).unwrap()
+    } else { 0 };
 
     let verbose = matches.opt_present("v");
 

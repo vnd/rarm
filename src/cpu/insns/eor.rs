@@ -15,7 +15,7 @@ impl ::cpu::core::CPU {
         assert!(arm.operands().len() == 3);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
         let d = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());
 
@@ -23,7 +23,7 @@ impl ::cpu::core::CPU {
         let result = shifted ^ self.get_reg(n);
 
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

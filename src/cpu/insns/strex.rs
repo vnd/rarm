@@ -10,10 +10,10 @@ impl ::cpu::core::CPU {
             return None;
         }
 
-        ::util::assert_shift(&arm.operands());
-        ::util::check_subtracted(&arm.operands(), insn);
-        assert!(false == arm.writeback);
-        assert!(false == arm.update_flags);
+        ::util::assert_shift(arm.operands());
+        ::util::check_subtracted(arm.operands(), insn);
+        assert!(!arm.writeback);
+        assert!(!arm.update_flags);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_MEM);

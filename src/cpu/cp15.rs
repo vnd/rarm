@@ -6,8 +6,8 @@ use util::get_bit;
      p. 1556 CTR
      p. 1558 DACR
      p. 1752 DSB
-     p. 1648 MIDR 
-     p. 1651 MPIDR 
+     p. 1648 MIDR
+     p. 1651 MPIDR
      p. 1707 SCTLR
      p. 1724 TTBCR
      p. 1729 TTBR0
@@ -37,7 +37,7 @@ impl ::cpu::core::CPU {
             (5, 0, 0, 0) => unsafe { ::memory::dfsr },
             (6, 0, 0, 0) => unsafe { ::memory::dfar },
             (13,0, 0, 3) => self.thread_id,
-            _ => { 
+            _ => {
                 println!("({}, {}, {}, {})", crn, opc1, crm, opc2);
                 unreachable!()},
         }
@@ -48,31 +48,31 @@ impl ::cpu::core::CPU {
         match tuple {
             ( 0, 2, 0 , 0) => {}, // CSSELR
             ( 3, 0, 0 , 0) => self.cp15_set_dacr(rt),
-            ( 7, 0, 14, 2) => {}, // DCCISW
-            ( 7, 0, 10, 5) => {}, // DMB
-            ( 7, 0, 10, 4) => {}, // DSB
-            ( 7, 0, 5 , 0) => {}, // ICIALLU
-            ( 7, 0, 5 , 6) => {}, // BPIALL
-            (10, 0, 2 , 0) => {}, // PRRR
+            ( 7, 0, 14, 2) | // DCCISW
+            ( 7, 0, 10, 5) | // DMB
+            ( 7, 0, 10, 4) | // DSB
+            ( 7, 0, 5 , 0) | // ICIALLU
+            ( 7, 0, 5 , 6) | // BPIALL
+            (10, 0, 2 , 0) | // PRRR
             (10, 0, 2 , 1) => {}, // NMRR
             ( 1, 0, 0 , 0) => self.cp15_set_sctlr(rt),
             ( 8, 0, 7 , 0) => {}, // TLBIALL
             ( 2, 0, 0 , 0) => self.cp15_set_ttbr0(rt),
             ( 2, 0, 0 , 1) => self.cp15_set_ttbr1(rt),
             ( 2, 0, 0 , 2) => self.cp15_set_ttbcr(rt),
-            ( 7, 0, 5 , 4) => {}, // ISB
-            ( 7, 0, 10, 1) => {}, // DCCMVAC
-            ( 7, 0, 14, 1) => {}, // DCCIMVAC
-            ( 7, 0, 11, 1) => {}, // DCCMVAU
+            ( 7, 0, 5 , 4) | // ISB
+            ( 7, 0, 10, 1) | // DCCMVAC
+            ( 7, 0, 14, 1) | // DCCIMVAC
+            ( 7, 0, 11, 1) | // DCCMVAU
             ( 7, 0, 5 , 1) => {}, // ICIMVAU
             (13, 0, 0 , 3) => self.cp15_set_thread_id(rt), // TPIDRURO
-            ( 9, 0, 12, 0) => {}, // PMCR
-            ( 9, 0, 12, 2) => {}, // PMCNTENCLR
-            ( 9, 0, 14, 2) => {}, // PMINTENCLR
-            (13, 0, 0 , 1) => {}, // CONTEXTIDR
-            ( 8, 0, 7 , 1) => {}, // TLBIMVA
+            ( 9, 0, 12, 0) | // PMCR
+            ( 9, 0, 12, 2) | // PMCNTENCLR
+            ( 9, 0, 14, 2) | // PMINTENCLR
+            (13, 0, 0 , 1) | // CONTEXTIDR
+            ( 8, 0, 7 , 1) | // TLBIMVA
             ( 8, 0, 7 , 2) => {}, // TLBIASID
-            _ => { 
+            _ => {
                 println!("({}, {}, {}, {})", crn, opc1, crm, opc2);
                 unreachable!()},
 
@@ -84,7 +84,7 @@ impl ::cpu::core::CPU {
     }
 
     pub fn cp15_get_sctlr(&self) -> u32 {
-        return self.sctlr;
+        self.sctlr
     }
 
     pub fn cp15_set_sctlr(&mut self, sctlr: u32) {

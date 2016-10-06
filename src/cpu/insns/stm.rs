@@ -14,7 +14,7 @@ impl ::cpu::core::CPU {
         for op in arm.operands() {
             assert!(op.ty == ARMOpType::ARM_OP_REG);
         }
-        assert!(false == arm.update_flags);
+        assert!(!arm.update_flags);
         self.assert_exception_return(insn);
 
         let len = arm.operands().len() - 1; // w/o base register
@@ -30,7 +30,7 @@ impl ::cpu::core::CPU {
             } else {
                 assert!(false);
             }
-            address = address + 4;
+            address += 4;
         }
 
         if arm.writeback {

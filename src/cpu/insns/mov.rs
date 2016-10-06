@@ -63,7 +63,7 @@ impl ::cpu::core::CPU {
 
         assert!(arm.operands().len() == 2);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
         ::util::assert_shift(&arm.operands()[0..1]);
 
         let raw: u32 = self.mem.read(insn.address as usize);

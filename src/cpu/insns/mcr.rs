@@ -18,8 +18,8 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[3].ty == ARMOpType::ARM_OP_CIMM);
         assert!(arm.operands()[4].ty == ARMOpType::ARM_OP_CIMM);
         assert!(arm.operands()[5].ty == ARMOpType::ARM_OP_IMM);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         let coproc = ::util::imm_to_u32(arm.operands()[0].data());
         assert!(coproc == 15);
