@@ -12,8 +12,8 @@ impl ::cpu::core::CPU {
         ::util::assert_shift(arm.operands());
         assert!(arm.operands().len() == 1);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         let addr = self.op_value(&arm.operands()[0]).0;
         assert!(0 == ::util::get_bits(addr, (0..1)));

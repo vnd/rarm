@@ -12,8 +12,8 @@ impl ::cpu::core::CPU {
         ::util::assert_shift(arm.operands());
         assert!(arm.operands().len() == 1);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_IMM);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         println!("syscall {}", self.get_reg(7));
         // p. 1211

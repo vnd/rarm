@@ -22,7 +22,7 @@ impl ::cpu::core::CPU {
         let address = self.op_value(&arm.operands()[1]).0;
         self.mem.write(address as usize, val as usize);
 
-        if true == arm.writeback {
+        if arm.writeback {
             // 3 operands hopefully means post-indexed form
             if arm.operands().len() == 3 {
                 assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_IMM);

@@ -13,14 +13,14 @@ impl ::cpu::core::CPU {
         ::util::assert_shift(&arm.operands()[0..2]);
         assert!(arm.operands().len() == 3);
         let val = self.op_value(&arm.operands()[2]);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let d = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());
         let (result, carry, overflow) = ::arith::add_with_carry(self.get_reg(n), val.0, 0);
 
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

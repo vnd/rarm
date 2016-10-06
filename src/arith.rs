@@ -3,12 +3,12 @@ use capstone::ffi::detail::{ARMShifter};
 // p. 41
 pub fn lsl_c(value: u32, shift: u32) -> (u32, u32) {
     assert!(shift > 0);
-    
+
     let result = (value as u64) << shift;
     let carry_out = match result & (1 << 32) {
-		0 => 0,
-		_ => 1,
-	};
+        0 => 0,
+        _ => 1,
+    };
     (result as u32, carry_out)
 }
 
@@ -19,13 +19,13 @@ pub fn lsl(value: u32, shift: u32) -> u32 {
     }
 
     let (result, _) = lsl_c(value, shift);
-    return result;
+    result
 }
 
 // p. 42
 pub fn lsr_c(value: u32, shift: u32) -> (u32, u32) {
     assert!(shift > 0);
-    
+
     let ret = value >> shift;
     if value > 0 && ret == value {
         println!("lsr_c: 0x{:x} >> 0x{:x} == 0x{:x}", value, shift, ret);
@@ -79,7 +79,7 @@ pub fn lsr(value: u32, shift: u32) -> u32 {
     }
 
     let (result, _) = lsr_c(value, shift);
-    return result;
+    result
 }
 
 // p. 292
@@ -124,23 +124,13 @@ pub fn expand_imm_c(imm: u32, carry_in: u32) -> (u32, u32) {
 }
 
 pub fn count_leading_zero_bits(val: u32) -> u32 {
-    let mut count = 0;
-
-    for i in (0..32).rev() {
-        if ::util::get_bit(val, i) == 1 {
-            break;
-        } else {
-            count += 1;
-        }
-    }
-
-    return count;
+    val.leading_zeros()
 }
 
 pub fn sign_extend_u16(val: u16) -> u32 {
-	val as i16 as i32 as u32
+    val as i16 as i32 as u32
 }
 
 pub fn sign_extend_u32(val: u32) -> u32 {
-	val as i32 as u32
+    val as i32 as u32
 }

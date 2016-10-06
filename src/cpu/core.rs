@@ -116,7 +116,7 @@ impl CPU {
         self.set_cpsr_bit(CPSR_F, 1);
         self.set_cpsr_bit(CPSR_A, 1);
         self.verbose = verbose;
-        let mut regs_clone = self.regs.clone();
+        let mut regs_clone = self.regs;
         loop {
             if ::memory::fault {
                 /* Current architecture does not allow to process page fault when it occurs.
@@ -128,7 +128,7 @@ impl CPU {
                 self.set_pc(fault_handler);
                 ::memory::fault = false;
             } else {
-                regs_clone = self.regs.clone();
+                regs_clone = self.regs;
                 let mut raw_insn: [u8; 4] = [0; 4];
                 let raw_insn_u32: u32 = self.mem.read(self.get_pc() as usize); // may also fault
                 if ::memory::fault {

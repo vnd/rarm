@@ -38,25 +38,18 @@ impl ::cpu::core::CPU {
             _ => unreachable!(),
         };
 
-        let offset_addr = match add {
-            true  => self.get_reg(n) + val,
-            false => self.get_reg(n) - val,
-        };
-        let address = match index {
-            true  => offset_addr,
-            false => self.get_reg(n),
-        };
+        let offset_addr = if add { self.get_reg(n) + val } else { self.get_reg(n) - val };
+        let address = if index { offset_addr } else { self.get_reg(n) };
         if wback {
             self.set_reg(n, offset_addr);
         }
-        let data = match sign_extend {
-            true  => ::arith::sign_extend_u16(self.mem.read_halfword(address as usize)),
-            false => self.mem.read_halfword(address as usize) as u32
-        };
+        let data = if sign_extend {
+            ::arith::sign_extend_u16(self.mem.read_halfword(address as usize))
+        } else { self.mem.read_halfword(address as usize) as u32 };
         self.set_reg(t, data);
 
-		//LDRH seems to be decoded incorrectly by capstone:
-		//https://github.com/aquynh/capstone/issues/695
+        //LDRH seems to be decoded incorrectly by capstone:
+        //https://github.com/aquynh/capstone/issues/695
         //self.exec_ldrx(insn, 2)
         None
     }

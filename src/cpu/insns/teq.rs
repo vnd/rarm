@@ -14,7 +14,7 @@ impl ::cpu::core::CPU {
 
         assert!(arm.operands().len() == 2);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let raw: u32 = self.mem.read(insn.address as usize);
         let rn = self.op_value(&arm.operands()[0]).0;
@@ -26,7 +26,7 @@ impl ::cpu::core::CPU {
 
         let result = rn ^ shifted;
 
-        assert!(true == arm.update_flags);
+        assert!(arm.update_flags);
         self.set_cpsr_bit(::cpu::cpsr::CPSR_N, ::util::get_bit(result, 31));
         self.set_cpsr_bit(::cpu::cpsr::CPSR_Z, ::util::is_zero(result));
         self.set_cpsr_bit(::cpu::cpsr::CPSR_C, carry);

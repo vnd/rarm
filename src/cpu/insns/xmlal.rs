@@ -15,7 +15,7 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[3].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let dlo = ::util::reg_num(arm.operands()[0].data());
         let dhi = ::util::reg_num(arm.operands()[1].data());
@@ -28,9 +28,10 @@ impl ::cpu::core::CPU {
         let rm = self.get_reg(m);
         let rdlo = self.get_reg(dlo);
         let rdhi = self.get_reg(dhi);
-        let result = match signed {
-            true => ((rn as i64) * (rm as i64) + ((((rdhi as u64) << 32) + (rdlo as u64)) as i64)) as u64,
-            false => (rn as u64) * (rm as u64) + ((rdhi as u64) << 32) + (rdlo as u64),
+        let result = if signed {
+            ((rn as i64) * (rm as i64) + ((((rdhi as u64) << 32) + (rdlo as u64)) as i64)) as u64
+        } else {
+            (rn as u64) * (rm as u64) + ((rdhi as u64) << 32) + (rdlo as u64)
         };
 
         self.set_reg(dlo, (result & 0xFFFFFFFF) as u32);

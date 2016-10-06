@@ -12,9 +12,9 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands().len() == 3);
-        assert!(false == arm.writeback);
-        assert!(false == arm.update_flags);
-        ::util::assert_shift(&arm.operands());
+        assert!(!arm.writeback);
+        assert!(!arm.update_flags);
+        ::util::assert_shift(arm.operands());
         let raw: u32 = self.mem.read(insn.address as usize);
         assert!(::util::get_bits(raw, 10..11) == 0);
 

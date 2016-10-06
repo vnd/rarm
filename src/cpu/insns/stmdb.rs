@@ -13,16 +13,15 @@ impl ::cpu::core::CPU {
         for op in arm.operands() {
             assert!(op.ty == ARMOpType::ARM_OP_REG);
         }
-        assert!(false == arm.update_flags);
+        assert!(!arm.update_flags);
 
-        let mut explicit_mode: Option<::cpu::core::ProcessorMode> = None;
 
         /* http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0204j/Cihcadda.html {^}
          * Otherwise, data is transferred into or out of the User mode registers
          * instead of the current mode registers. (c) */
-        if insn.op_str().unwrap().ends_with("} ^") {
-            explicit_mode = Some(::cpu::core::ProcessorMode::Usr);
-        }
+        let explicit_mode = if insn.op_str().unwrap().ends_with("} ^") {
+            Some(::cpu::core::ProcessorMode::Usr)
+        } else { None };
 
         let len = arm.operands().len() - 1; // w/o base register
         let mut address = self.op_value(&arm.operands()[0]).0 - (4 * len) as u32;
@@ -36,7 +35,7 @@ impl ::cpu::core::CPU {
                 None => self.get_reg(r) as usize,
             };
             self.mem.write(address as usize, val);
-            address = address + 4;
+            address += 4;
         }
 
         if arm.writeback {

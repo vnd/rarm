@@ -13,7 +13,7 @@ impl ::cpu::core::CPU {
         let index = ::util::get_bit(raw, 24);
 
         ::util::assert_shift(&arm.operands()[0..1]);
-        ::util::check_subtracted(&arm.operands(), insn);
+        ::util::check_subtracted(arm.operands(), insn);
         assert!(arm.operands().len() == 2 || arm.operands().len() == 3);
         if arm.operands().len() == 3 {
             assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_IMM);
@@ -23,7 +23,7 @@ impl ::cpu::core::CPU {
         }
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_MEM);
-        assert!(false == arm.update_flags);
+        assert!(!arm.update_flags);
 
         let t = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());
@@ -52,15 +52,13 @@ impl ::cpu::core::CPU {
         if t == 15 {
             assert!(false); // t != 15 for imm ldrb at least
             return Some(value);
+        } else if sign_extend {
+            self.set_reg(t, ::arith::sign_extend_u32(value));
         } else {
-            if sign_extend {
-                self.set_reg(t, ::arith::sign_extend_u32(value));
-            } else {
-                self.set_reg(t, value);
-            }
+            self.set_reg(t, value);
         }
 
-        if true == arm.writeback {
+        if arm.writeback {
             self.set_reg(n, offset_addr);
         }
 

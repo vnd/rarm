@@ -14,7 +14,7 @@ impl ::cpu::core::CPU {
         for op in arm.operands() {
             assert!(op.ty == ARMOpType::ARM_OP_REG);
         }
-        assert!(false == arm.update_flags);
+        assert!(!arm.update_flags);
         self.assert_exception_return(insn);
 
         let mut address = self.op_value(&arm.operands()[0]).0 + 4;
@@ -30,10 +30,10 @@ impl ::cpu::core::CPU {
             assert!(r != 15);
             let value = self.mem.read(address as usize);
             self.set_reg(r, value);
-            address = address + 4;
+            address += 4;
         }
 
-        if arm.writeback && false == n_is_in_list {
+        if arm.writeback && !n_is_in_list {
             let val = self.get_reg(n) + (4 * len) as u32;
             self.set_reg(n, val);
         }

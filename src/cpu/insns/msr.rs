@@ -14,8 +14,8 @@ impl ::cpu::core::CPU {
 
         ::util::assert_shift(arm.operands());
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_SYSREG);
-        assert!(false == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(!arm.update_flags);
+        assert!(!arm.writeback);
 
         let val = match arm.operands()[1].data() {
             ARMOpData::Reg(r) => { let n = ::util::cs_reg_num(r); assert!(n != 15); self.get_reg(n) },
