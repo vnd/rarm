@@ -44,7 +44,7 @@ pub fn sp804_read(addr: usize, va: usize) -> u32 {
             _ => unreachable!(),
         };
         println!("sp804_read: 0x{:x} (0x{:x}) returned 0x{:x}", addr, va, ret);
-        return ret;
+        ret
     }
 }
 
@@ -71,7 +71,7 @@ unsafe fn _timer_tick(ctrl: *mut u32, value: *mut u32, load: *mut u32, verbose: 
     }
 
     let step = 1;
-    *value = *value - step;
+    *value -= step;
     if *value < step {
         match get_bit(*ctrl, TIMER_MODE) {
             0 => *value = 0xFFFFFFFF, // free running
@@ -81,10 +81,8 @@ unsafe fn _timer_tick(ctrl: *mut u32, value: *mut u32, load: *mut u32, verbose: 
         ret = get_bit(*ctrl, TIMER_INT) == 1;
         if !ret {
             println!("timer has wrapped but interrupt is disabled (0x{:x})", *ctrl);
-        } else {
-            if verbose {
-                println!("timer has wrapped AND interrupt is enabled (0x{:x})", *ctrl);
-            }
+        } else if verbose {
+            println!("timer has wrapped AND interrupt is enabled (0x{:x})", *ctrl);
         }
     }
     ret
@@ -94,7 +92,7 @@ pub fn timer_tick(verbose: bool) -> (bool, bool) {
     unsafe {
         let timer1_int = _timer_tick(&mut timer1.ctrl, &mut timer1.value, &mut timer1.load, verbose);
         let timer2_int = _timer_tick(&mut timer2.ctrl, &mut timer2.value, &mut timer2.load, verbose);
-        return (timer1_int, timer2_int)
+        (timer1_int, timer2_int)
     }
 }
 

@@ -19,14 +19,14 @@ impl ::cpu::core::CPU {
             ARMOpType::ARM_OP_REG => self.op_value(&arm.operands()[2]).0,
             _ => { assert!(false); 0 },
         };
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let rn = self.op_value(&arm.operands()[1]).0;
         let (result, carry, overflow) = ::arith::add_with_carry(rn, !val, 1);
 
         let d = ::util::reg_num(arm.operands()[0].data());
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

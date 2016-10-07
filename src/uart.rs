@@ -32,21 +32,20 @@ enum UARTRegs {
 
 pub fn uart_read(addr: usize, _: usize) -> u32 {
     let reg = UARTRegs::from_usize(addr);
-    let ret: u32 = match reg {
+    match reg {
         Some(UARTRegs::FR)        => { 0x90 },
         Some(UARTRegs::CR)        => unsafe { uart_cr },
         Some(UARTRegs::MIS)       => if unsafe { tirq_mask } { 1 << 5 } else { 0 },
-        Some(UARTRegs::PERIPHID0) => { 0x11 }, 
-        Some(UARTRegs::PERIPHID1) => { 0x10 }, 
-        Some(UARTRegs::PERIPHID2) => { 0x14 }, 
-        Some(UARTRegs::PERIPHID3) => { 0x00 }, 
-        Some(UARTRegs::PCELLID0)  => { 0x0d }, 
-        Some(UARTRegs::PCELLID1)  => { 0xf0 }, 
-        Some(UARTRegs::PCELLID2)  => { 0x05 }, 
-        Some(UARTRegs::PCELLID3)  => { 0xb1 }, 
+        Some(UARTRegs::PERIPHID0) => { 0x11 },
+        Some(UARTRegs::PERIPHID1) => { 0x10 },
+        Some(UARTRegs::PERIPHID2) => { 0x14 },
+        Some(UARTRegs::PERIPHID3) => { 0x00 },
+        Some(UARTRegs::PCELLID0)  => { 0x0d },
+        Some(UARTRegs::PCELLID1)  => { 0xf0 },
+        Some(UARTRegs::PCELLID2)  => { 0x05 },
+        Some(UARTRegs::PCELLID3)  => { 0xb1 },
         _ => { println!("unhandled uart_read: 0x{:x}", addr); unreachable!() },
-    };
-    ret
+    }
 }
 
 pub unsafe fn update_tx_irq_flag() {
@@ -60,19 +59,19 @@ pub unsafe fn update_tx_irq_flag() {
 pub fn uart_write(addr: usize, va: usize, value: usize) {
     let reg = UARTRegs::from_usize(addr);
     match reg {
-		Some(UARTRegs::DR) => {
-			assert!(value < ::std::u8::MAX as usize);
-			write!(&mut ::std::io::stderr(), "{}", value as u8 as char).unwrap();
-		},
-        Some(UARTRegs::IBRD) => {},
+        Some(UARTRegs::DR) => {
+            assert!(value < ::std::u8::MAX as usize);
+            write!(&mut ::std::io::stderr(), "{}", value as u8 as char).unwrap();
+        },
+        Some(UARTRegs::IBRD) |
         Some(UARTRegs::FBRD) => {},
         Some(UARTRegs::LCRH) => unsafe {
             fifo_enabled = ::util::get_bit(value as u32, 4) == 1;
-        }, 
+        },
         Some(UARTRegs::CR) => unsafe {
             uart_cr = value as u32;
             update_tx_irq_flag();
-        }, 
+        },
         Some(UARTRegs::IFLS) => {},
         Some(UARTRegs::IMSC) => unsafe {
             tirq_mask = ::util::get_bit(value as u32, 5) == 1;
@@ -83,10 +82,10 @@ pub fn uart_write(addr: usize, va: usize, value: usize) {
                 tx_irq = false;
             }
         },
-		_ => {
-			println!("unhandled uart_write: 0x{:x} at 0x{:x} (0x{:x})", value, addr, va);
-			unreachable!();
-		},
+        _ => {
+            println!("unhandled uart_write: 0x{:x} at 0x{:x} (0x{:x})", value, addr, va);
+            unreachable!();
+        },
     }
 
     if addr > 0 {

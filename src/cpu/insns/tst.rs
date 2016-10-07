@@ -22,8 +22,8 @@ impl ::cpu::core::CPU {
             ARMOpType::ARM_OP_REG => self.op_value(&arm.operands()[1]),
             _ => { assert!(false); (0, 0) },
         };
-        assert!(true == arm.update_flags);
-        assert!(false == arm.writeback);
+        assert!(arm.update_flags);
+        assert!(!arm.writeback);
 
         let n = ::util::reg_num(arm.operands()[0].data());
         let result = self.get_reg(n) & shifted;

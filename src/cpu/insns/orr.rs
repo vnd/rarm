@@ -23,7 +23,7 @@ impl ::cpu::core::CPU {
         let n = ::util::reg_num(arm.operands()[1].data());
         let raw: u32 = self.mem.read(insn.address as usize);
         let (val, carry) = match arm.operands()[2].ty {
-            ARMOpType::ARM_OP_REG => { 
+            ARMOpType::ARM_OP_REG => {
                 if arm.operands()[2].shifter() as u32 >= ARMShifter::ARM_SFT_ASR_REG as u32 {
                     let shift_reg = ::util::cs_reg_num(transmute(arm.operands()[2].shift_value));
                     let shift_reg_val = self.get_reg(shift_reg);
@@ -41,7 +41,7 @@ impl ::cpu::core::CPU {
 
         let result = self.get_reg(n) | val;
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

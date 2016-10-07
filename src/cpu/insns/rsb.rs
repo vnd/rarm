@@ -14,7 +14,7 @@ impl ::cpu::core::CPU {
         assert!(arm.operands().len() == 3);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let d = ::util::reg_num(arm.operands()[0].data());
         let rn = self.op_value(&arm.operands()[1]).0;
@@ -22,7 +22,7 @@ impl ::cpu::core::CPU {
         let (result, carry, overflow) = ::arith::add_with_carry(!rn, shifted, 1);
 
         if d == 15 {
-            assert!(false == arm.update_flags);
+            assert!(!arm.update_flags);
             return Some(result);
         }
 

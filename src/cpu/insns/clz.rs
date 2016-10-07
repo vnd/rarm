@@ -13,8 +13,8 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands().len() == 2);
-        assert!(false == arm.writeback);
-        assert!(false == arm.update_flags);
+        assert!(!arm.writeback);
+        assert!(!arm.update_flags);
 
         let d = ::util::reg_num(arm.operands()[0].data());
         let m = ::util::reg_num(arm.operands()[1].data());

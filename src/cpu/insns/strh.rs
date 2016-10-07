@@ -43,14 +43,8 @@ impl ::cpu::core::CPU {
             _ => unreachable!(),
         };
 
-        let offset_addr = match add {
-            true  => self.get_reg(n) + val,
-            false => self.get_reg(n) - val,
-        };
-        let address = match index {
-            true  => offset_addr,
-            false => self.get_reg(n),
-        };
+        let offset_addr = if add { self.get_reg(n) + val } else { self.get_reg(n) - val };
+        let address = if index { offset_addr } else { self.get_reg(n) };
         assert!(::util::get_bit(address, 0) == 0);
         self.mem.write_halfword(address as usize, ::util::get_bits(rt, 0..15) as usize);
         if wback {

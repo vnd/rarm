@@ -14,7 +14,7 @@ impl ::cpu::core::CPU {
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_REG);
-        assert!(false == arm.writeback);
+        assert!(!arm.writeback);
 
         let d = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());

@@ -20,7 +20,7 @@ impl ::cpu::core::CPU {
         }
 
         ::util::assert_shift(&arm.operands()[0..1]);
-        ::util::check_subtracted(&arm.operands(), insn);
+        ::util::check_subtracted(arm.operands(), insn);
 
         let raw: u32 = self.mem.read(insn.address as usize);
         let index = ::util::get_bit(raw, 24);
@@ -30,16 +30,15 @@ impl ::cpu::core::CPU {
         let t = ::util::reg_num(arm.operands()[0].data());
         let n = ::util::reg_num(arm.operands()[1].data());
 
-        let ops = arm.operands().len(); 
+        let ops = arm.operands().len();
         assert!(ops == 2 || ops == 3);
         assert!(arm.operands()[0].ty == ARMOpType::ARM_OP_REG);
         assert!(arm.operands()[1].ty == ARMOpType::ARM_OP_MEM);
-        assert!(false == arm.update_flags);
-        let mut imm = 0;
-        if ops == 3 {
+        assert!(!arm.update_flags);
+        let imm = if ops == 3 {
             assert!(arm.operands()[2].ty == ARMOpType::ARM_OP_IMM);
-            imm = ::util::imm_to_u32(arm.operands()[2].data());
-        }
+            ::util::imm_to_u32(arm.operands()[2].data())
+        } else { 0 };
 
         let offset_addr = match add {
             1 => self.op_value(&arm.operands()[1]).0 + imm,

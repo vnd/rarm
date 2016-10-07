@@ -9,7 +9,7 @@ impl ::cpu::core::CPU {
     }
 
     fn op_value_reg_imm(&self, op: &ARMOp) -> (u32, u32) {
-        assert!(op.subtracted == false);
+        assert!(!op.subtracted);
         let value = match op.data() {
             ARMOpData::Reg(r) => self.get_reg(::util::cs_reg_num(r)) as u32,
             ARMOpData::Imm(i) => i,
@@ -43,7 +43,7 @@ impl ::cpu::core::CPU {
                     assert!(m.disp == 0);
                     let index = unsafe { self.get_reg(::util::cs_reg_num(transmute(m.index))) };
                     let (shifted, new_carry) = match shifter {
-                        ARMShifter::ARM_SFT_LSL => ::arith::shift_c(index, shifter, op.shift_value, carry),
+                        ARMShifter::ARM_SFT_LSL |
                         ARMShifter::ARM_SFT_LSR => ::arith::shift_c(index, shifter, op.shift_value, carry),
                         ARMShifter::ARM_SFT_INVALID => (index, 0),
                         _ => unreachable!(),
@@ -70,7 +70,7 @@ impl ::cpu::core::CPU {
 
     pub fn _op_value(&self, op: &ARMOp, override_scale: bool) -> (u32, u32) {
         match op.ty {
-            ARMOpType::ARM_OP_REG => self.op_value_reg_imm(op),
+            ARMOpType::ARM_OP_REG |
             ARMOpType::ARM_OP_IMM => self.op_value_reg_imm(op),
             ARMOpType::ARM_OP_MEM => self.op_value_mem(op, override_scale),
             _ => unreachable!(),

@@ -32,9 +32,9 @@ impl ::cpu::core::CPU {
         unsafe {
             icciar = irq;
             irq_status = match irq_status {
-                IrqStatus::Inactive      => IrqStatus::Pending,
-                IrqStatus::Pending       => IrqStatus::Pending, // should not happen under normal conditions?
-                _                        => {
+                IrqStatus::Inactive |
+                IrqStatus::Pending => IrqStatus::Pending, // should not happen under normal conditions?
+                _ => {
                     println!("unexpected irq_status: {:#?}", irq_status);
                     return None; // FIXME should not happen but happens
                 }
@@ -124,10 +124,10 @@ impl ::cpu::core::CPU {
         println!("gic_dist_write: 0x{:x} at 0x{:x}", val, addr);
         match addr {
             0x00  => unsafe { icddcr = val as u32; assert!(val == 0 || val == 1) },
-            0x100 ... 0x11c => {}, // ICDISERn, enabling
-            0x180 ... 0x188 => {}, // ICDICERn, disabling
-            0x400 ... 0x45c => {}, // ICDIPRn (priorities), 0xa0a0a0a0 
-            0x820 ... 0x85c => {}, // ICDIPTRn (targets), 0x1010101 
+            0x100 ... 0x11c |      // ICDISERn, enabling
+            0x180 ... 0x188 |      // ICDICERn, disabling
+            0x400 ... 0x45c |      // ICDIPRn (priorities), 0xa0a0a0a0
+            0x820 ... 0x85c |      // ICDIPTRn (targets), 0x1010101
             0xc08 ... 0xc14 => {}, // ICDICFRn, edge/level, etc
             _ => { println!("unhandled gic_dist_write: 0x{:x}", addr); unreachable!() },
         }
