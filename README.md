@@ -1,6 +1,3 @@
-#### Advertisement
-I'm looking for a remote embedded/system programming job, or may be a Rust gig. My email is ivdivd0 {at} gmail.com
-
 #### Overview
 ARMv7 emulator written in Rust (C-style, not really idiomatic), emulated board -- Versatile Express
 * hardware: ARMv7 CPU including CP15, MMU, read-only UART, timer and interrupt controller
