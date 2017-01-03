@@ -3,7 +3,7 @@ ARMv7 emulator written in Rust (C-style, not really idiomatic), emulated board -
 * hardware: ARMv7 CPU including CP15, MMU, read-only UART, timer and interrupt controller
 * OS: vanilla Linux 3.2 with custom config (turned off SMP, Thumb, hardware FP, etc)
 * rudimentary breakpoins, watchpoints, single stepping
-* boots to "hello world" initramfs
+* boots to prompt (note: UART is read-only at the moment, so not possible to type)
 
 #### Stats
 * about 1 millions instruction per second, which is 60-70 times slower than qemu
@@ -169,4 +169,5 @@ TCP cubic registered
 NET: Registered protocol family 17
 drivers/rtc/hctosys.c: unable to open rtc device (rtc0)
 Freeing init memory: 140K
-Hello World!
+/bin/sh: can't access tty; job control turned off
+/ #
