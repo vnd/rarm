@@ -1,9 +1,9 @@
 #### Overview
 ARMv7 emulator written in Rust (C-style, not really idiomatic), emulated board -- Versatile Express
-* hardware: ARMv7 CPU including CP15, MMU, read-only UART, timer and interrupt controller
+* hardware: ARMv7 CPU including MMU and CP15; UART, timer and interrupt controller
 * OS: vanilla Linux 3.2 with custom config (turned off SMP, Thumb, hardware FP, etc)
 * rudimentary breakpoins, watchpoints, single stepping
-* boots to prompt (note: UART is read-only at the moment, so not possible to type)
+* boots to prompt
 
 #### Stats
 * about 1 millions instruction per second, which is 60-70 times slower than qemu
@@ -88,14 +88,15 @@ Omitted above but important:
 Uncompressing Linux... done, booting the kernel.
 Initializing cgroup subsys cpuset
 Linux version 3.2.0 (ivan@T400) (gcc version 4.7.3 (Ubuntu/Linaro 4.7.3-12ubuntu1) ) #5 Fri Apr 15 14:56:26 CEST 2016
+Ignoring unrecognised tag 0x00000000
 bootconsole [earlycon0] enabled
 sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956ms
-Kernel command line: console=ttyAMA0 earlyprintk=ttyAMA0
+Kernel command line: console=ttyAMA0 earlyprintk=ttyAMA0 root=/dev/ram rdinit=/bin/sh
 PID hash table entries: 64 (order: -4, 256 bytes)
 Dentry cache hash table entries: 2048 (order: 1, 8192 bytes)
 Inode-cache hash table entries: 1024 (order: 0, 4096 bytes)
 Memory: 16MB = 16MB total
-Memory: 11276k/11276k available, 5108k reserved, 0K highmem
+Memory: 10776k/10776k available, 5608k reserved, 0K highmem
 Virtual kernel memory layout:
     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
@@ -127,7 +128,7 @@ SCSI subsystem initialized
 usbcore: registered new interface driver usbfs
 usbcore: registered new interface driver hub
 usbcore: registered new device driver usb
-Advanced Linux Sound Architecture Driver Version 1.0.24.                                                                                              [2/9238]
+Advanced Linux Sound Architecture Driver Version 1.0.24.
 Switching to clocksource v2m-timer1
 NET: Registered protocol family 2
 IP route cache hash table entries: 1024 (order: 0, 4096 bytes)
@@ -143,7 +144,7 @@ RPC: Registered udp transport module.
 RPC: Registered tcp transport module.
 RPC: Registered tcp NFSv4.1 backchannel transport module.
 Unpacking initramfs...
-Freeing initrd memory: 576K
+Freeing initrd memory: 1072K
 NetWinder Floating Point Emulator V0.97 (double precision)
 JFFS2 version 2.2. (NAND) Â© 2001-2006 Red Hat, Inc.
 msgmni has been set to 23
@@ -170,4 +171,6 @@ NET: Registered protocol family 17
 drivers/rtc/hctosys.c: unable to open rtc device (rtc0)
 Freeing init memory: 140K
 /bin/sh: can't access tty; job control turned off
-/ #
+/ # uname -a
+uname -a
+Linux rarm 3.2.0 #5 Fri Apr 15 14:56:26 CEST 2016 armv7l GNU/Linux

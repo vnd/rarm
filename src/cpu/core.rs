@@ -177,14 +177,11 @@ impl CPU {
                     if irq_handler != None {
                         self.set_pc(irq_handler.unwrap());
                     }
-                }
-            }
-
-            if ::uart::tx_irq {
-                self.dump_state();
-                let irq_handler = self.do_irq(::cpu::interrupt::UART_IRQ);
-                if irq_handler != None {
-                    self.set_pc(irq_handler.unwrap());
+                } else if ::uart::tx_irq || ::uart::rx_irq {
+                    match self.do_irq(::cpu::interrupt::UART_IRQ) {
+                        Some(handler) => self.set_pc(handler),
+                        None => {},
+                    }
                 }
             }
         }

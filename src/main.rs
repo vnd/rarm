@@ -13,10 +13,14 @@ pub mod sys;
 pub mod timer;
 pub mod uart;
 
+use std::io::{stdin, Read};
 use std::env;
 use getopts::Options;
 use memory::Memory;
 use cpu::core::CPU;
+use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc;
+use std::thread;
 
 fn common_read(addr: usize, va: usize) -> u32 {
     println!("common_read: 0x{:x} (0x{:x})", addr, va);
@@ -171,5 +175,28 @@ fn main() {
     let capstone =
         capstone::HandleBuilder::new(capstone::ffi::CsArch::ARCH_ARM,
                                      capstone::ffi::mode::ARM).detail().build().unwrap();
+
+    let (tx, rx): (Sender<char>, Receiver<char>) = mpsc::channel();
+
+    thread::spawn(move || {
+        let mut character = [0];
+        loop {
+            if let Ok(_) = stdin().read(&mut character) {
+                tx.send(character[0] as char).unwrap();
+            }
+        }
+    });
+
+    thread::spawn(move || {
+        loop {
+            match rx.try_recv() {
+                Ok(ch) => unsafe {
+                    ::uart::push_input_char(ch);
+                },
+                Err(_) => {}
+            }
+        }
+    });
+
     unsafe { cpu.start(capstone, args.verbose); }
 }
