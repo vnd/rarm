@@ -58,9 +58,9 @@ pub fn objdump_insn(bytes: &[u8]) {
 
 pub unsafe fn dump_insn(insn: &Insn, verbose: bool) {
     print_insn_mnemonic(insn, verbose);
-    objdump_insn(&insn.bytes[..4]);
 
     if verbose {
+        objdump_insn(&insn.bytes[..4]);
         println!("{:#?}", insn);
         println!("{:#?}", insn.detail().unwrap().data_arm());
     }
